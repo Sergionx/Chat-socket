@@ -1,12 +1,33 @@
-import express from 'express';
-
-const app = express();
+import express from "express";
+import http from "http";
+import { Server as SocketServer } from "socket.io";
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello NOD Readers!');
+const app = express();
+const server = http.createServer(app);
+const io = new SocketServer(
+  server
+  //   {
+  //   cors: {
+  //     origin: "http://localhost:5173",
+  //   },
+  // }
+);
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("message", (message: string) => {
+    socket.broadcast.emit("message", {
+      body: message,
+      id: socket.id,
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
 });
 
-app.listen(port, () => {
-return console.log(`Express server is listening at http://localhost:${port} 🚀`);
-});
+server.listen(port);
+console.log(`Express server is listening at http://localhost:${port} 🚀`);

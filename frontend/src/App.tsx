@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormEvent, useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
-function App() {
-  const [count, setCount] = useState(0)
+const socket = io("/");
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface SocketMessage {
+  body: string;
+  id: string;
 }
 
-export default App
+export default function App() {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<SocketMessage[]>([]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+
+    socket.emit("message", message);
+    setMessage("");
+    receiveMessage({
+      body: message,
+      id: 'Me',
+    });
+  }
+
+  useEffect(() => {
+    socket.on("message", receiveMessage);
+
+    return () => turnOffSoccket();
+  }, []);
+
+  function receiveMessage(newMessage: SocketMessage): void {
+    setMessages((oldMessages) => [...oldMessages, newMessage]);
+  }
+
+  function turnOffSoccket() {
+    socket.off("message");
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Write your message"
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+        />
+
+        <button>Send</button>
+      </form>
+
+      <ul>
+        {messages.map((message, index) => (
+          <li key={index}>
+            {message.id}: {message.body}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
