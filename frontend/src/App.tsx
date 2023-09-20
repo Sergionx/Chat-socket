@@ -4,13 +4,10 @@ import { io } from "socket.io-client";
 import Blobs from "./components/Blobs";
 
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
+import { SocketMessage } from "./models/SocketMessage";
+import Messages from "./components/Messages";
 
 const socket = io("/");
-
-interface SocketMessage {
-  body: string;
-  id: string;
-}
 
 export default function App() {
   const [message, setMessage] = useState("");
@@ -24,6 +21,7 @@ export default function App() {
       {
         body: message,
         id: "Me",
+        type: "text",
       },
       false
     );
@@ -36,23 +34,47 @@ export default function App() {
   }, []);
 
   function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
-    console.log(newMessage.id, decrypt);
-
     newMessage.body = decrypt
-      ? decryptMessage(newMessage.body)
+      ? decryptString(newMessage.body)
       : newMessage.body;
 
     setMessages((oldMessages) => [...oldMessages, newMessage]);
   }
 
-  function decryptMessage(message: string): string {
-    return AES.decrypt(message, import.meta.env.VITE_ENCRYPT_KEY).toString(
+  function decryptString(data: string): string {
+    return AES.decrypt(data, import.meta.env.VITE_ENCRYPT_KEY).toString(
       enc.Utf8
     );
   }
 
   function turnOffSoccket() {
     socket.off("message");
+  }
+
+  function handleFileChange(files: FileList | null) {
+    if (!files) {
+      return;
+    }
+
+    const file = files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64String = reader.result?.toString();
+      if (base64String) {
+        receiveMessage(
+          {
+            body: base64String,
+            id: "Me",
+            type: "image",
+          },
+          false
+        );
+        socket.emit("image", base64String);
+      }
+    };
+
+    reader.readAsDataURL(file);
   }
 
   // TODO - Add images
@@ -65,26 +87,12 @@ export default function App() {
         <Blobs />
         <div
           className="flex flex-col backdrop-blur-md bg-secondary-200/50 p-8 rounded-md
-          h-[80vh] w-[80vw] max-w-[600px] max-h-[600px]
+          min-h-[80vh] w-[80vw] max-w-[600px] max-h-[600px] overflow-y-auto 
         "
         >
           <h1 className="text-4xl font-bold mb-6">Private Chat</h1>
 
-          <ul className="flex flex-col gap-2 mb-6">
-            {messages.map((message, index) => (
-              <li
-                key={index}
-                className={`p-2 rounded-lg
-                ${
-                  message.id === "Me"
-                    ? "bg-primary-400/90 rounded-tr-none"
-                    : "bg-primary-300/90 rounded-tl-none"
-                }`}
-              >
-                {message.body}
-              </li>
-            ))}
-          </ul>
+          <Messages messages={messages} />
 
           <form
             onSubmit={handleSubmit}
@@ -99,6 +107,11 @@ export default function App() {
               "
               value={message}
               onChange={(event) => setMessage(event.target.value)}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(event) => handleFileChange(event.target.files)}
             />
 
             <button type="button" className="ml-auto">

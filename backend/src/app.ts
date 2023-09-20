@@ -1,8 +1,9 @@
 import express from "express";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
-import { AES } from "crypto-js"; // Import the crypto-js library
 import { config as configDotENV } from "dotenv";
+import { listenImages, listenMessages } from "./listeners";
+
 
 configDotENV();
 
@@ -17,19 +18,14 @@ const io = new SocketServer(server);
 // const serverPublicKey = serverDH.generateKeys();
 
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  // console.log("A user connected");
 
-  socket.on("message", (message: string) => {
-    const encryptedMessage = AES.encrypt(message, encryptKey).toString();
+  listenMessages(socket, encryptKey)
 
-    socket.broadcast.emit("message", {
-      body: encryptedMessage,
-      id: socket.id,
-    });
-  });
+  listenImages(socket, encryptKey);
 
   socket.on("disconnect", () => {
-    console.log("A user disconnected");
+    // console.log("A user disconnected");
   });
 });
 
