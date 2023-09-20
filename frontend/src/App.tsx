@@ -1,6 +1,9 @@
 import { AES, enc } from "crypto-js";
 import { FormEvent, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import Blobs from "./components/Blobs";
+
+import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 
 const socket = io("/");
 
@@ -52,27 +55,67 @@ export default function App() {
     socket.off("message");
   }
 
+  // TODO - Add images
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="bg-slate-300"
-          placeholder="Write your message"
-          value={message}
-          onChange={(event) => setMessage(event.target.value)}
-        />
+    <>
+      <main
+        className="bg-primary-400/40 min-h-screen relative 
+          grid place-items-center"
+      >
+        <Blobs />
+        <div className="backdrop-blur-md bg-secondary-200/50 p-8 rounded-md">
+          <h1 className="text-4xl font-bold mb-6">Private Chat</h1>
 
-        <button>Send</button>
-      </form>
+          <ul className="flex flex-col gap-2 mb-6">
+            {messages.map((message, index) => (
+              <li
+                key={index}
+                className={`p-2 rounded-lg
+                ${
+                  message.id === "Me"
+                    ? "bg-primary-500/90 rounded-tr-none"
+                    : "bg-primary-300/90 rounded-tl-none"
+                }`}
+              >
+                {message.id}: {message.body}
+              </li>
+            ))}
+          </ul>
 
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            {message.id}: {message.body}
-          </li>
-        ))}
-      </ul>
-    </div>
+          <form
+            onSubmit={handleSubmit}
+            className="flex bg-white p-2 rounded-md focus-within:ring-2
+            ring-offset-2 ring-secondary-600 "
+          >
+            {/* TODO - Handle resize */}
+            <input
+              placeholder="Write your message..."
+              className="placeholder-primary-300 resize-none
+                outline-none group-focus:ring-2 group-focus:ring-primary-400
+              "
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+            />
+
+            <button type="button">
+              <AiOutlineFileImage
+                size={28}
+                className="text-primary-400 hover:text-primary-500"
+              />
+            </button>
+
+            <button
+              className="bg-secondary-100/80 rounded-full p-2"
+              type="submit"
+            >
+              <AiOutlineSend
+                size={24}
+                className="text-primary-400 hover:text-primary-500"
+              />
+            </button>
+          </form>
+        </div>
+      </main>
+    </>
   );
 }
