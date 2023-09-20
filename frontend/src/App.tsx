@@ -1,3 +1,4 @@
+import { AES, enc } from "crypto-js";
 import { FormEvent, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -14,23 +15,37 @@ export default function App() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-
     socket.emit("message", message);
     setMessage("");
-    receiveMessage({
-      body: message,
-      id: 'Me',
-    });
+    receiveMessage(
+      {
+        body: message,
+        id: "Me",
+      },
+      false
+    );
   }
 
   useEffect(() => {
-    socket.on("message", receiveMessage);
+    socket.on("message", (message) => receiveMessage(message, true));
 
     return () => turnOffSoccket();
   }, []);
 
-  function receiveMessage(newMessage: SocketMessage): void {
+  function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
+    console.log(newMessage.id, decrypt);
+
+    newMessage.body = decrypt
+      ? decryptMessage(newMessage.body)
+      : newMessage.body;
+
     setMessages((oldMessages) => [...oldMessages, newMessage]);
+  }
+
+  function decryptMessage(message: string): string {
+    return AES.decrypt(message, import.meta.env.VITE_ENCRYPT_KEY).toString(
+      enc.Utf8
+    );
   }
 
   function turnOffSoccket() {
@@ -42,6 +57,7 @@ export default function App() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
+          className="bg-slate-300"
           placeholder="Write your message"
           value={message}
           onChange={(event) => setMessage(event.target.value)}

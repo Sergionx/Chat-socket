@@ -1,25 +1,29 @@
 import express from "express";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
-const port = 3000;
+import { AES } from "crypto-js"; // Import the crypto-js library
+import { config as configDotENV } from "dotenv";
+
+configDotENV();
+
+const port = process.env.PORT;
+const encryptKey = process.env.ENCRYPT_KEY;
 
 const app = express();
 const server = http.createServer(app);
-const io = new SocketServer(
-  server
-  //   {
-  //   cors: {
-  //     origin: "http://localhost:5173",
-  //   },
-  // }
-);
+const io = new SocketServer(server);
+
+// const serverDH = createDiffieHellman(256);
+// const serverPublicKey = serverDH.generateKeys();
 
 io.on("connection", (socket) => {
   console.log("A user connected");
 
   socket.on("message", (message: string) => {
+    const encryptedMessage = AES.encrypt(message, encryptKey).toString();
+
     socket.broadcast.emit("message", {
-      body: message,
+      body: encryptedMessage,
       id: socket.id,
     });
   });
