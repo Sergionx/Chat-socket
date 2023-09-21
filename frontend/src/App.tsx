@@ -80,12 +80,12 @@ export default function App() {
   // TODO - Add images
   return (
     <>
-      <main
-        className="bg-primary-400/40 min-h-screen relative 
+      <div
+        className="bg-primary-400/40 min-h-screen  
           grid place-items-center"
       >
         <Blobs />
-        <div
+        <main
           className="flex flex-col backdrop-blur-md bg-secondary-200/50 p-8 rounded-md
           min-h-[80vh] w-[80vw] max-w-[600px] max-h-[600px] overflow-y-auto 
         "
@@ -96,7 +96,7 @@ export default function App() {
 
           <form
             onSubmit={handleSubmit}
-            className="flex  mt-auto bg-white p-2 rounded-md focus-within:ring-2
+            className="flex items-center  mt-auto bg-white p-2 rounded-md focus-within:ring-2
             ring-offset-2 ring-secondary-600 "
           >
             {/* TODO - Handle resize */}
@@ -110,26 +110,28 @@ export default function App() {
             />
             <input
               type="file"
+              id="file"
+              hidden={true}
               accept="image/*"
               onChange={(event) => handleFileChange(event.target.files)}
             />
 
-            <button type="button" className="ml-auto">
+            <label htmlFor="file" className="ml-auto cursor-pointer">
               <AiOutlineFileImage
                 size={28}
                 className="text-primary-400 hover:text-primary-500"
               />
-            </button>
+            </label>
 
-            <button className="bg-secondary-100 rounded-full p-2" type="submit">
+            <button className="ml-2 bg-secondary-100 rounded-full p-2" type="submit">
               <AiOutlineSend
                 size={24}
                 className="text-primary-400 hover:text-primary-500"
               />
             </button>
           </form>
-        </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }
