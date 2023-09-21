@@ -1,51 +1,27 @@
-import { AES, enc } from "crypto-js";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect } from "react";
 import { io } from "socket.io-client";
 import Blobs from "./components/Blobs";
 
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
-import { SocketMessage } from "./models/SocketMessage";
 import Messages from "./components/Messages";
+import useMessages from "./hooks/useMessages";
 
 const socket = io("/");
 
 export default function App() {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<SocketMessage[]>([]);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-    socket.emit("message", message);
-    setMessage("");
-    receiveMessage(
-      {
-        body: message,
-        id: "Me",
-        type: "text",
-      },
-      false
-    );
-  }
+  const {
+    message,
+    messages,
+    receiveMessage,
+    handleMessageChange,
+    handleFormSubmit,
+  } = useMessages();
 
   useEffect(() => {
     socket.on("message", (message) => receiveMessage(message, true));
 
     return () => turnOffSoccket();
   }, []);
-
-  function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
-    newMessage.body = decrypt
-      ? decryptString(newMessage.body)
-      : newMessage.body;
-
-    setMessages((oldMessages) => [...oldMessages, newMessage]);
-  }
-
-  function decryptString(data: string): string {
-    return AES.decrypt(data, import.meta.env.VITE_ENCRYPT_KEY).toString(
-      enc.Utf8
-    );
-  }
 
   function turnOffSoccket() {
     socket.off("message");
@@ -95,7 +71,7 @@ export default function App() {
           <Messages messages={messages} />
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={(e) => handleFormSubmit(e, socket)}
             className="flex items-center  mt-auto bg-white p-2 rounded-md focus-within:ring-2
             ring-offset-2 ring-secondary-600 "
           >
@@ -106,7 +82,7 @@ export default function App() {
                 outline-none group-focus:ring-2 group-focus:ring-primary-400
               "
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
+              onChange={handleMessageChange}
             />
             <input
               type="file"
@@ -123,7 +99,10 @@ export default function App() {
               />
             </label>
 
-            <button className="ml-2 bg-secondary-100 rounded-full p-2" type="submit">
+            <button
+              className="ml-2 bg-secondary-100 rounded-full p-2"
+              type="submit"
+            >
               <AiOutlineSend
                 size={24}
                 className="text-primary-400 hover:text-primary-500"
@@ -131,6 +110,7 @@ export default function App() {
             </button>
           </form>
         </main>
+        {/* <SelectedImage /> */}
       </div>
     </>
   );
