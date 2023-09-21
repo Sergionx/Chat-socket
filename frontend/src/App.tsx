@@ -1,10 +1,14 @@
-import { FormEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { io } from "socket.io-client";
-import Blobs from "./components/Blobs";
 
+import Blobs from "./components/Blobs";
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
+
 import Messages from "./components/Messages";
+import SelectedImage from "./components/Selected-Image";
+
 import useMessages from "./hooks/useMessages";
+import useSelectedImage from "./hooks/useSelectedImage";
 
 const socket = io("/");
 
@@ -16,6 +20,9 @@ export default function App() {
     handleMessageChange,
     handleFormSubmit,
   } = useMessages();
+
+  const { selectedImage, handleCloseClick, handleImageClick } =
+    useSelectedImage();
 
   useEffect(() => {
     socket.on("message", (message) => receiveMessage(message, true));
@@ -68,7 +75,7 @@ export default function App() {
         >
           <h1 className="text-4xl font-bold mb-6">Private Chat</h1>
 
-          <Messages messages={messages} />
+          <Messages messages={messages} handleImageClick={handleImageClick} />
 
           <form
             onSubmit={(e) => handleFormSubmit(e, socket)}
@@ -110,7 +117,11 @@ export default function App() {
             </button>
           </form>
         </main>
-        {/* <SelectedImage /> */}
+
+        <SelectedImage
+          selectedImage={selectedImage}
+          handleCloseClick={handleCloseClick}
+        />
       </div>
     </>
   );
