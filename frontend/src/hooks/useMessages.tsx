@@ -25,7 +25,10 @@ export default function useMessages() {
     setMessage(event.target.value);
   }
 
-  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>, socket: Socket) {
+  function handleFormSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+    socket: Socket
+  ) {
     event.preventDefault();
     socket.emit("message", message);
     setMessage("");
@@ -39,5 +42,11 @@ export default function useMessages() {
     );
   }
 
-  return { messages, receiveMessage, message, handleMessageChange, handleFormSubmit };
+  return {
+    messages,
+    receiveMessage,
+    message,
+    handleMessageChange,
+    handleFormSubmit,
+  };
 }
