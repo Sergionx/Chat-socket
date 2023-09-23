@@ -45,15 +45,23 @@ export default function App() {
     reader.onload = () => {
       const base64String = reader.result?.toString();
       if (base64String) {
+        if (base64String.length > 1000000) {
+          alert("File size must be less than 1 MB");
+          return;
+        }
+
         receiveMessage(
           {
-            body: base64String,
+            text: message,
+            image: base64String,
             id: "Me",
-            type: "image",
           },
           false
         );
-        socket.emit("image", base64String);
+        socket.emit("image", {
+          image: base64String,
+          text: message,
+        });
       }
     };
 

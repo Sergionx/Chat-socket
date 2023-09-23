@@ -1,5 +1,5 @@
 export interface SocketMessage {
-  body: string;
+  text?: string;
   id: string;
-  type: "text" | "image";
+  image?: string;
 }

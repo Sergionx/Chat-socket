@@ -24,14 +24,14 @@ export default function Messages({ messages, handleImageClick }: Props) {
                     : "bg-primary-300/90 rounded-tl-none"
                 }`}
           >
-            {message.type === "text" ? (
-              message.body
-            ) : (
+            {message.text}
+
+            {message.image && (
               <img
-                src={message.body}
+                src={message.image}
                 className="max-w-full max-h-full cursor-pointer"
                 onClick={() =>
-                  handleImageClick(message.body, "message.caption")
+                  handleImageClick(message.image!, "message.caption")
                 }
               />
             )}

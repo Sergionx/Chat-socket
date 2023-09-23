@@ -7,10 +7,12 @@ export default function useMessages() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<SocketMessage[]>([]);
 
-  function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
-    newMessage.body = decrypt
-      ? decryptString(newMessage.body)
-      : newMessage.body;
+  function receiveMessage(newMessage:  SocketMessage, decrypt: boolean): void {
+    console.log(newMessage);
+    newMessage.text =
+      decrypt && newMessage.text
+        ? decryptString(newMessage.text)
+        : newMessage.text;
 
     setMessages((oldMessages) => [...oldMessages, newMessage]);
   }
@@ -30,13 +32,13 @@ export default function useMessages() {
     socket: Socket
   ) {
     event.preventDefault();
+
     socket.emit("message", message);
     setMessage("");
     receiveMessage(
       {
-        body: message,
+        text: message,
         id: "Me",
-        type: "text",
       },
       false
     );
