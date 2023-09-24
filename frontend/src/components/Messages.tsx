@@ -24,6 +24,12 @@ export default function Messages({ messages, handleImageClick }: Props) {
               textOverflow: "ellipsis", // Add an ellipsis at the end of the text if it is truncated
             }}
           >
+            <header
+              className={`text-sm font-semibold mb-[2px]
+            ${message.id === "Me" ? "text-end" : "text-start"}`}
+            >
+              {message.id === "Me" ? "You" : message.id}
+            </header>
             {message.text}
 
             {message.image && (
