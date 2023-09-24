@@ -47,8 +47,7 @@ export default function App() {
         <Blobs />
         <main
           className="flex flex-col backdrop-blur-md bg-secondary-200/50 p-8 rounded-md
-          min-h-[80vh] w-[80vw] max-w-[600px] max-h-[600px] overflow-y-auto 
-        "
+          min-h-[80vh] w-[80vw] max-w-[600px] max-h-[600px] overflow-y-auto "
         >
           <h1 className="text-4xl font-bold mb-6">Private Chat</h1>
 
@@ -60,6 +59,7 @@ export default function App() {
             handleFormSubmit={handleFormSubmit}
             loadImages={loadImages}
             handleMessageChange={handleMessageChange}
+            imagesSelected={imagesSelected}
           />
         </main>
 
