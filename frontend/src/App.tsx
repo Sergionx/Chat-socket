@@ -36,7 +36,6 @@ export default function App() {
     socket.off("message");
   }
 
-  // TODO - Add images
   return (
     <>
       <div
