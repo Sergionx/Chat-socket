@@ -3,7 +3,7 @@ import { SocketMessage } from "../models/SocketMessage";
 
 interface Props {
   messages: SocketMessage[];
-  handleImageClick(src: string, caption?: string): void;
+  handleImageClick(selectedImage: SocketMessage): void;
 }
 
 export default function Messages({ messages, handleImageClick }: Props) {
@@ -31,7 +31,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
                 src={message.image}
                 className="max-w-full max-h-full cursor-pointer mt-2 rounded-sm"
                 onClick={() =>
-                  handleImageClick(message.image!, "message.caption")
+                  handleImageClick(message)
                 }
               />
             )}

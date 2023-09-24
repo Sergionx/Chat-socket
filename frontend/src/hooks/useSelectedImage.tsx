@@ -1,13 +1,11 @@
 import { useState } from "react";
+import { SocketMessage } from "../models/SocketMessage";
 
 export default function useSelectedImage() {
-  const [selectedImage, setSelectedImage] = useState<{
-    src: string;
-    caption?: string;
-  } | null>(null);
+  const [selectedImage, setSelectedImage] = useState<SocketMessage | null>(null);
 
-  const handleImageClick = (src: string, caption?: string) => {
-    setSelectedImage({ src, caption });
+  const handleImageClick = (messageSelected: SocketMessage) => {
+    setSelectedImage(messageSelected);
   };
 
   const handleCloseClick = () => {

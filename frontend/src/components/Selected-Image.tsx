@@ -1,10 +1,8 @@
 import { useEffect } from "react";
+import { SocketMessage } from "../models/SocketMessage";
 
 interface Props {
-  selectedImage: {
-    src: string;
-    caption?: string;
-  } | null;
+  selectedImage: SocketMessage | null;
   handleCloseClick: () => void;
 }
 
@@ -31,10 +29,10 @@ export default function SelectedImage({
       {selectedImage && (
         <section className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative lg:max-w-[90%]">
-            <img src={selectedImage.src} className="max-w-full max-h-full" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-white bg-opacity-90">
-              {selectedImage.caption}
-            </div>
+            <img src={selectedImage.image} className="max-w-full max-h-full" />
+            {selectedImage?.text && (
+              <div className="p-4 bg-white">{selectedImage.text}</div>
+            )}
           </div>
         </section>
       )}
