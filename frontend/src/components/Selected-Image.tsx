@@ -30,6 +30,7 @@ export default function SelectedImage({
         <section className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative lg:max-w-[90%]">
             <img src={selectedImage.image} className="max-w-full max-h-full" />
+            {/* TODO - Handle large text and better UI */}
             {selectedImage?.text && (
               <div className="p-4 bg-white">{selectedImage.text}</div>
             )}

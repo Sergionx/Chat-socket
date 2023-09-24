@@ -7,34 +7,42 @@ interface Props {
 }
 
 export default function Messages({ messages, handleImageClick }: Props) {
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
   return (
     <>
       <ul className="flex flex-col gap-2 mb-6">
         {messages.map((message, index) => (
           <li
             key={index}
-            className={`p-2 rounded-lg
+            className={`p-2 rounded-lg w-fit max-w-[100%] 
                 ${
                   message.id === "Me"
-                    ? "bg-primary-400/90 rounded-tr-none"
+                    ? "bg-primary-400/80 rounded-tr-none self-end"
                     : "bg-primary-300/90 rounded-tl-none"
                 }`}
+            style={{
+              overflow: "hidden", // Hide any text that exceeds the width of the element
+              textOverflow: "ellipsis", // Add an ellipsis at the end of the text if it is truncated
+            }}
           >
             {message.text}
 
             {message.image && (
               <img
                 src={message.image}
-                className="max-w-full max-h-full cursor-pointer mt-2 rounded-sm"
-                onClick={() =>
-                  handleImageClick(message)
-                }
+                className={`max-w-full max-h-full cursor-pointer rounded-sm mb-2
+                ${message.text ? "mt-2" : ""}
+                `}
+                onClick={() => handleImageClick(message)}
               />
             )}
+
+            <footer className="text-end text-sm">
+              {message.sendedAt.toLocaleString(navigator.language, {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+            </footer>
           </li>
         ))}
       </ul>

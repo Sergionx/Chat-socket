@@ -59,9 +59,11 @@ export default function useMessages() {
               text: message,
               image: base64String,
               id: "Me",
+              sendedAt: new Date(),
             },
             false
           );
+          console.log(new Date());
         }
       };
 
@@ -72,6 +74,7 @@ export default function useMessages() {
         {
           text: message,
           id: "Me",
+          sendedAt: new Date(),
         },
         false
       );
@@ -79,6 +82,7 @@ export default function useMessages() {
 
     setMessage("");
     setImagesSelected(null);
+
   }
 
   function loadImages(files: FileList | null) {

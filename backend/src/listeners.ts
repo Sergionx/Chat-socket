@@ -10,6 +10,7 @@ export function listenMessages(socket: Socket, encryptKey: string) {
     const socketMessage: SocketMessage = {
       text: encryptedMessage,
       id: socket.id,
+      sendedAt: new Date(),
     };
 
     socket.broadcast.emit("message", socketMessage);
@@ -26,6 +27,7 @@ export function listenImages(socket: Socket, encryptKey: string) {
         id: socket.id,
         image: encryptedBase64String,
         text: text ? AES.encrypt(text, encryptKey).toString() : "",
+        sendedAt: new Date(),
       };
 
       socket.broadcast.emit("message", socketMessage);
