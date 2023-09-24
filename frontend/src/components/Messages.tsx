@@ -16,8 +16,8 @@ export default function Messages({ messages, handleImageClick }: Props) {
             className={`p-2 rounded-lg w-fit max-w-[100%] 
                 ${
                   message.id === "Me"
-                    ? "bg-primary-400/80 rounded-tr-none self-end"
-                    : "bg-primary-300/90 rounded-tl-none"
+                    ? "bg-primary-400/80 rounded-br-none self-end"
+                    : "bg-primary-300/90 rounded-bl-none"
                 }`}
             style={{
               overflow: "hidden", // Hide any text that exceeds the width of the element
