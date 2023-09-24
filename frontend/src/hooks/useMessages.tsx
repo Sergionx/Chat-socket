@@ -9,7 +9,6 @@ export default function useMessages() {
   const [messages, setMessages] = useState<SocketMessage[]>([]);
 
   function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
-    console.log(newMessage);
     newMessage.text =
       decrypt && newMessage.text
         ? decryptString(newMessage.text)
@@ -19,6 +18,11 @@ export default function useMessages() {
       decrypt && newMessage.image
         ? decryptString(newMessage.image)
         : newMessage.image;
+
+    newMessage.sendedAt =
+      newMessage.id === "Me"
+        ? newMessage.sendedAt
+        : new Date(newMessage.sendedAt);
 
     setMessages((oldMessages) => [...oldMessages, newMessage]);
   }
@@ -82,7 +86,6 @@ export default function useMessages() {
 
     setMessage("");
     setImagesSelected(null);
-
   }
 
   function loadImages(files: FileList | null) {
