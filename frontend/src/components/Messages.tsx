@@ -29,7 +29,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
             {message.image && (
               <img
                 src={message.image}
-                className="max-w-full max-h-full cursor-pointer"
+                className="max-w-full max-h-full cursor-pointer mt-2 rounded-sm"
                 onClick={() =>
                   handleImageClick(message.image!, "message.caption")
                 }
