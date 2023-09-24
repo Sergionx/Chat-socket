@@ -15,6 +15,11 @@ export default function useMessages() {
         ? decryptString(newMessage.text)
         : newMessage.text;
 
+    newMessage.image =
+      decrypt && newMessage.image
+        ? decryptString(newMessage.image)
+        : newMessage.image;
+
     setMessages((oldMessages) => [...oldMessages, newMessage]);
   }
 
@@ -39,6 +44,7 @@ export default function useMessages() {
       reader.onload = () => {
         const base64String = reader.result?.toString();
         if (base64String) {
+          // TODO - Better alert
           if (base64String.length > 1000000) {
             alert("File size must be less than 1 MB");
             return;
