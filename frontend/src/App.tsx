@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 
 import Blobs from "./components/Blobs";
-import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 
 import Messages from "./components/Messages";
 import SelectedImage from "./components/Selected-Image";
