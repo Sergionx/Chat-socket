@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-import Blobs from "./components/Blobs";
+import Blobs from "../components/Blobs";
 
-import Messages from "./components/Messages";
-import SelectedImage from "./components/Selected-Image";
+import Messages from "../components/Messages";
+import SelectedImage from "../components/Selected-Image";
 
-import useMessages from "./hooks/useMessages";
-import useSelectedImage from "./hooks/useSelectedImage";
-import InputMessage from "./components/Input-Message";
+import useMessages from "../hooks/useMessages";
+import useSelectedImage from "../hooks/useSelectedImage";
+import InputMessage from "../components/Input-Message";
 
 const socket = io("/", {
   query: {
@@ -18,6 +18,7 @@ const socket = io("/", {
 });
 
 export default function ChatRoom() {
+  
   const {
     message,
     messages,
