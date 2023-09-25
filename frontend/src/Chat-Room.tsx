@@ -10,9 +10,14 @@ import useMessages from "./hooks/useMessages";
 import useSelectedImage from "./hooks/useSelectedImage";
 import InputMessage from "./components/Input-Message";
 
-const socket = io("/");
+const socket = io("/", {
+  query: {
+    roomCode: "123",
+    roomPassword: "123",
+  },
+});
 
-export default function App() {
+export default function ChatRoom() {
   const {
     message,
     messages,
