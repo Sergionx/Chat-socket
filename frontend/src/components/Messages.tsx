@@ -14,7 +14,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
             key={index}
             className={`p-2 rounded-lg w-fit max-w-[100%] 
                 ${
-                  message.id === "Me"
+                  message.userName === "Me"
                     ? "bg-primary-400/80 rounded-br-none self-end"
                     : "bg-primary-300/90 rounded-bl-none"
                 }`}
@@ -25,16 +25,16 @@ export default function Messages({ messages, handleImageClick }: Props) {
           >
             <header
               className={`text-sm font-semibold mb-[2px]
-            ${message.id === "Me" ? "text-end" : "text-start"}`}
+            ${message.userName === "Me" ? "text-end" : "text-start"}`}
             >
-              {message.id === "Me" ? "You" : message.id}
+              {message.userName === "Me" ? "You" : message.userName}
             </header>
             {message.text}
 
             {message.image && (
               <img
                 src={message.image}
-                className={`max-w-full max-h-full cursor-pointer rounded-sm mb-2
+                className={`aspect-auto max-w-[25rem] cursor-pointer rounded-sm mb-2
                 ${message.text ? "mt-2" : ""}
                 `}
                 onClick={() => handleImageClick(message)}
