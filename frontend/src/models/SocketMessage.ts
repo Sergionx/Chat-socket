@@ -1,6 +1,6 @@
 export interface SocketMessage {
   text?: string;
-  id: string;
+  userName: string;
   image?: string;
   sendedAt: Date;
 }
