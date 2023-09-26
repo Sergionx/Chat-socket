@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { SocketMessage } from "../models/SocketMessage";
 import { AES, enc } from "crypto-js";
 import { Socket } from "socket.io-client";
+import useSocket from "./useSocket";
+import { useLocation } from "react-router-dom";
 
 export default function useMessages() {
   const [message, setMessage] = useState("");
   const [imagesSelected, setImagesSelected] = useState<FileList | null>(null);
   const [messages, setMessages] = useState<SocketMessage[]>([]);
+
+  const location = useLocation();
+  const userName: string | undefined = useMemo(
+    () => location.state?.userName,
+    [location.state?.userName]
+  );
+
+  const { roomCode, socket } = useSocket({ receiveMessage });
 
   function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
     newMessage.text =
@@ -20,7 +30,7 @@ export default function useMessages() {
         : newMessage.image;
 
     newMessage.sendedAt =
-      newMessage.id === "Me"
+      newMessage.userName === "Me"
         ? newMessage.sendedAt
         : new Date(newMessage.sendedAt);
 
@@ -42,6 +52,10 @@ export default function useMessages() {
     socket: Socket
   ) {
     event.preventDefault();
+    // TODO - Mejor manera de hacer esto
+    // if (!userName) {
+    //   return;
+    // }
 
     if (imagesSelected) {
       const reader = new FileReader();
@@ -54,16 +68,21 @@ export default function useMessages() {
             return;
           }
 
+          const imageMessage: SocketMessage = {
+            text: message,
+            image: base64String,
+            userName: userName,
+            sendedAt: new Date(),
+          };
+
           socket.emit("image", {
             image: base64String,
             text: message,
           });
           receiveMessage(
             {
-              text: message,
-              image: base64String,
-              id: "Me",
-              sendedAt: new Date(),
+              ...imageMessage,
+              userName: "Me",
             },
             false
           );
@@ -73,12 +92,17 @@ export default function useMessages() {
 
       reader.readAsDataURL(imagesSelected[0]);
     } else {
-      socket.emit("message", message);
+      const textMessage: SocketMessage = {
+        text: message,
+        userName: userName,
+        sendedAt: new Date(),
+      };
+
+      socket.emit("message", textMessage);
       receiveMessage(
         {
-          text: message,
-          id: "Me",
-          sendedAt: new Date(),
+          ...textMessage,
+          userName: "Me",
         },
         false
       );
@@ -103,5 +127,7 @@ export default function useMessages() {
     receiveMessage,
     handleMessageChange,
     handleFormSubmit,
+    socket,
+    roomCode,
   };
 }
