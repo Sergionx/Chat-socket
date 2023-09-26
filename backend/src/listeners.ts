@@ -4,14 +4,17 @@ import * as fs from "fs/promises";
 import { SocketMessage } from "./models/SocketMessage";
 
 export function listenMessages(socket: Socket, encryptKey: string) {
-  socket.on("message", (message: string) => {
-    const encryptedMessage = AES.encrypt(message, encryptKey).toString();
+  socket.on("message", (textMessage: SocketMessage) => {
+    const encryptedMessage = AES.encrypt(
+      textMessage.text,
+      encryptKey
+    ).toString();
 
     const socketMessage: SocketMessage = {
+      ...textMessage,
       text: encryptedMessage,
-      id: socket.id,
-      sendedAt: new Date(),
     };
+    console.log(socketMessage, textMessage);
 
     socket.broadcast.emit("message", socketMessage);
   });
