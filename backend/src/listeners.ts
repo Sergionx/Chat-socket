@@ -1,6 +1,5 @@
 import { AES } from "crypto-js";
 import { Socket } from "socket.io";
-import * as fs from "fs/promises";
 import { SocketMessage } from "./models/SocketMessage";
 
 export function listenMessages(socket: Socket, encryptKey: string) {
@@ -14,7 +13,6 @@ export function listenMessages(socket: Socket, encryptKey: string) {
       ...textMessage,
       text: encryptedMessage,
     };
-    console.log(socketMessage, textMessage);
 
     socket.broadcast.emit("message", socketMessage);
   });
