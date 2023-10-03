@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 import { Socket } from "socket.io-client";
+import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
 
 interface Props {
   socket: Socket;
@@ -11,7 +12,7 @@ interface Props {
     event: React.FormEvent<HTMLFormElement>,
     socket: Socket
   ) => void;
-  handleMessageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleMessageChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export default function InputMessage({
@@ -22,23 +23,38 @@ export default function InputMessage({
   handleFormSubmit,
   handleMessageChange,
 }: Props) {
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  useAutosizeTextArea(textAreaRef.current, message, {
+    maxHeight: 10,
+    heightUnit: "vh",
+  });
+
   const canSubmit: boolean = useMemo(() => {
     return message.length > 0 || !!imagesSelected;
   }, [message, imagesSelected]);
 
   return (
     <form
+      ref={formRef}
       onSubmit={(e) => handleFormSubmit(e, socket)}
-      className="flex items-center  mt-auto bg-white p-2 rounded-md focus-within:ring-2
+      className="flex items-center mt-auto bg-white p-2 rounded-md focus-within:ring-2
             ring-offset-2 ring-secondary-600 "
     >
-      {/* TODO - Handle resize */}
-      <input
+      <textarea
+        ref={textAreaRef}
         placeholder="Write your message..."
         className="placeholder-primary-300 resize-none w-full
           outline-none group-focus:ring-2 group-focus:ring-primary-400"
         value={message}
         onChange={handleMessageChange}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            formRef.current?.requestSubmit();
+          }
+        }}
       />
       <input
         type="file"
