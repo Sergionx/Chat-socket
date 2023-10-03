@@ -5,6 +5,7 @@ interface Props {
   handleImageClick(selectedImage: SocketMessage): void;
 }
 
+// TODO - When sending a image, show upload status
 export default function Messages({ messages, handleImageClick }: Props) {
   return (
     <>
@@ -21,6 +22,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
             style={{
               overflow: "hidden", // Hide any text that exceeds the width of the element
               textOverflow: "ellipsis", // Add an ellipsis at the end of the text if it is truncated
+              whiteSpace: "pre-wrap", // Preserve line breaks and wrap the text
             }}
           >
             <header
