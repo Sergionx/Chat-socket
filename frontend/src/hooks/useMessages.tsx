@@ -43,7 +43,8 @@ export default function useMessages() {
     );
   }
 
-  function handleMessageChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+
     setMessage(event.target.value);
   }
 
