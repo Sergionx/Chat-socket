@@ -31,8 +31,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
             >
               {message.userName === "Me" ? "You" : message.userName}
             </header>
-            {message.text}
-
+            
             {message.image && (
               <img
                 src={message.image}
@@ -42,6 +41,8 @@ export default function Messages({ messages, handleImageClick }: Props) {
                 onClick={() => handleImageClick(message)}
               />
             )}
+
+            {message.text}
 
             <footer className="text-end text-sm">
               {message.sendedAt.toLocaleString(navigator.language, {
