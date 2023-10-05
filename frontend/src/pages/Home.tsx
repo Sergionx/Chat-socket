@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axiosClient from "../config/axiosClient";
 import { useNavigate } from "react-router-dom";
+import { hashPassword } from "../utils/encryption";
+import JoinModal from "../components/JoinButton";
 
 export default function Home() {
   const [userName, setUserName] = useState("");
@@ -9,11 +11,16 @@ export default function Home() {
 
   async function handleCreateChat(): Promise<void> {
     // TODO - Prohibir que el usuario cree una sala sin nombre
+    const password = "hola123";
     if (!userName) console.log("Username is required");
 
     try {
       setJoiningRoom(true);
-      const response = await axiosClient.post("/chat-room", { userName });
+      const response = await axiosClient.post("/chat-room", {
+        userName,
+        isPrivate: false,
+        password: hashPassword(password),
+      });
 
       const { roomCode } = await response.data;
 
@@ -21,6 +28,12 @@ export default function Home() {
       navigate(`/${roomCode}`, { state: { userName } });
       setJoiningRoom(false);
     } catch (error) {}
+  }
+
+  function onJoin(roomCode: string) {
+    if (!userName) console.log("Username is required");
+    if (!roomCode) console.log("Room code is required");
+    navigate(`/${roomCode}`, { state: { userName } });
   }
 
   return (
@@ -52,25 +65,27 @@ export default function Home() {
       </section>
 
       <footer className="flex gap-4 mt-4">
-        <button
-          disabled={joiningRoom}
-          className="p-4 bg-primary-400 basis-1/2 rounded-lg
-            font-bold text-xl"
-        >
-          Join
-        </button>
+        <JoinModal disabled={joiningRoom} onJoin={onJoin} />
 
         <button
           onClick={handleCreateChat}
-          disabled={joiningRoom}
+          disabled={joiningRoom || !userName}
           // disabled={true}
-          className="p-4 border-2 border-primary-400 basis-1/2 rounded-lg
+          className="px-6 py-3.5 border-2 border-primary-400 basis-1/2 rounded-lg
             font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Create Chat
         </button>
       </footer>
 
+      <span
+        className="text-red-600 text-lg text-center mt-2"
+        hidden={!!userName}
+      >
+        You must enter a username to create a chat
+      </span>
+
+      {/* TODO - loading en su respectivo componente */}
       <div
         role="status"
         className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2"
