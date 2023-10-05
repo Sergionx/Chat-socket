@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { SocketMessage } from "../models/SocketMessage";
+import { SocketMessage } from "../../models/SocketMessage";
 
 interface Props {
   selectedImage: SocketMessage | null;

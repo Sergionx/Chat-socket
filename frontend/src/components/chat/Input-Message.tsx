@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 import { Socket } from "socket.io-client";
-import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
+import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
 
 interface Props {
   socket: Socket;

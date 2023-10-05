@@ -1,5 +1,5 @@
 import ReactShowMoreText from "react-show-more-text";
-import { SocketMessage } from "../models/SocketMessage";
+import { SocketMessage } from "../../models/SocketMessage";
 
 interface Props {
   messages: SocketMessage[];
