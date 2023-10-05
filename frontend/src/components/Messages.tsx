@@ -1,3 +1,4 @@
+import ReactShowMoreText from "react-show-more-text";
 import { SocketMessage } from "../models/SocketMessage";
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
 }
 
 // TODO - When sending a image, show upload status
+// TODO - If text is too long, show a "read more" button in the end of the text
 export default function Messages({ messages, handleImageClick }: Props) {
   return (
     <>
@@ -31,7 +33,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
             >
               {message.userName === "Me" ? "You" : message.userName}
             </header>
-            
+
             {message.image && (
               <img
                 src={message.image}
@@ -42,7 +44,14 @@ export default function Messages({ messages, handleImageClick }: Props) {
               />
             )}
 
-            {message.text}
+            {/* <ReactShowMoreText
+              lines={3}
+              className="overflow-hidden text-ellipsis whitespace-pre-wrap"
+              anchorClass="text-blue-700 hover:text-blue-800 cursor-pointer"
+              more="Read more"
+            >
+            </ReactShowMoreText> */}
+              {message.text}
 
             <footer className="text-end text-sm">
               {message.sendedAt.toLocaleString(navigator.language, {
