@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SocketMessage } from "../models/SocketMessage";
-import { AES, enc } from "crypto-js";
 import { Socket } from "socket.io-client";
 import useSocket from "./useSocket";
 import { useLocation } from "react-router-dom";
+import { decryptString } from "../utils/encryption";
 
 export default function useMessages() {
   const [message, setMessage] = useState("");
@@ -37,14 +37,7 @@ export default function useMessages() {
     setMessages((oldMessages) => [...oldMessages, newMessage]);
   }
 
-  function decryptString(data: string): string {
-    return AES.decrypt(data, import.meta.env.VITE_ENCRYPT_KEY).toString(
-      enc.Utf8
-    );
-  }
-
   function handleMessageChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-
     setMessage(event.target.value);
   }
 
