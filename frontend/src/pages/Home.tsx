@@ -2,7 +2,7 @@ import { useState } from "react";
 import axiosClient from "../config/axiosClient";
 import { useNavigate } from "react-router-dom";
 import { hashPassword } from "../utils/encryption";
-import JoinModal from "../components/JoinButton";
+import JoinModal from "../components/Join-Button";
 
 export default function Home() {
   const [userName, setUserName] = useState("");
