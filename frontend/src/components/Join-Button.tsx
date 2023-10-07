@@ -1,14 +1,16 @@
 import { useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
+import PasswordInput from "./inputs/Password-Input";
 
 interface Props {
-  onJoin: (roomCode: string) => void;
+  onJoin: (roomCode: string, password: string) => void;
   disabled: boolean;
 }
 
 export default function JoinButton({ onJoin, disabled }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const [roomCode, setRoomCode] = useState("");
+  const [password, setPassword] = useState("");
 
   function openModal() {
     modalRef.current?.showModal();
@@ -24,7 +26,7 @@ export default function JoinButton({ onJoin, disabled }: Props) {
   }
 
   function handleJoin() {
-    onJoin(roomCode);
+    onJoin(roomCode, password);
     closeModal();
   }
 
@@ -56,18 +58,31 @@ export default function JoinButton({ onJoin, disabled }: Props) {
           >
             <AiOutlineClose size={16} />
           </button>
-{/* TODO - Añadir validación con react-forms */}
-          <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
-            Room Code
-          </label>
-          <input
-            type="text"
-            id="roomCode"
-            className="border border-gray-400 rounded-lg p-2 mb-6 outline-none
-            focus:ring-2 focus:ring-primary-400 bg-gray-100"
-            value={roomCode}
-            onChange={(event) => setRoomCode(event.target.value)}
-          />
+          {/* TODO - Añadir validación con react-forms */}
+
+          <form>
+            <fieldset>
+              <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
+                Room Code
+              </label>
+              <input
+                type="text"
+                id="roomCode"
+                className="border border-gray-400 rounded-lg p-2 mb-6 outline-none
+            focus:ring-2 focus:ring-primary-400 bg-gray-100 w-full"
+                value={roomCode}
+                onChange={(event) => setRoomCode(event.target.value)}
+              />
+            </fieldset>
+
+            <fieldset className="mb-6">
+              <PasswordInput
+                id="create-roomCode"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </fieldset>
+          </form>
 
           <footer className="flex flex-row-reverse gap-4 pt-4 border-t border-gray-500">
             <button
