@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible, AiOutlineClose } from "react-icons/ai";
-import Switch from "./Switch";
+import Switch from "./inputs/Switch";
 
 interface Props {
   onCreate: (roomCode: string) => void;
