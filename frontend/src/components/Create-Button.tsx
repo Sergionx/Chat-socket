@@ -39,7 +39,7 @@ export default function CreateButton({ onCreate, disabled }: Props) {
       <button
         disabled={disabled}
         className="px-6 py-3.5 border-2 border-primary-400 basis-1/2 rounded-lg
-        font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed active:bg-gray-300"
         onClick={openModal}
       >
         Create chat

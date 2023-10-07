@@ -51,7 +51,7 @@ export default function JoinButton({ onJoin, disabled }: Props) {
         >
           <button
             className="absolute sm:right-3 sm:top-3 right-1 top-1
-            hover:bg-gray-200 p-2 rounded-md"
+            hover:bg-gray-200 p-2 rounded-md active:bg-gray-300"
             onClick={closeModal}
           >
             <AiOutlineClose size={16} />
