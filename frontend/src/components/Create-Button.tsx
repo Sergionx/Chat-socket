@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { AiFillEye, AiFillEyeInvisible, AiOutlineClose } from "react-icons/ai";
 import Switch from "./inputs/Switch";
+import PasswordInput from "./inputs/Password-Input";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface Props {
   onCreate: (roomCode: string) => void;
@@ -80,33 +81,15 @@ export default function CreateButton({ onCreate, disabled }: Props) {
                 Password
               </label>
 
-              {/* REVIEW - HAcerlo componente? */}
-              <section
-                className="border border-gray-400 rounded-lg p-2 mb-6 
-              focus-within:ring-2 focus-within:ring-primary-400 bg-gray-100
-              flex items-center"
-              >
-                <input
-                  type={isPasswordHidden ? "password" : "text"}
-                  id="roomCode"
-                  className="outline-none w-full bg-gray-100"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-                <button onClick={() => setIsPasswordHidden(!isPasswordHidden)}>
-                  {isPasswordHidden ? (
-                    <AiFillEye
-                      size={24}
-                      className="text-primary-400 hover:text-primary-500"
-                    />
-                  ) : (
-                    <AiFillEyeInvisible
-                      size={24}
-                      className="text-primary-400 hover:text-primary-500"
-                    />
-                  )}
-                </button>
-              </section>
+              <PasswordInput
+                id="roomCode"
+                password={password}
+                isPasswordHidden={isPasswordHidden}
+                onChangePassword={(event) => setPassword(event.target.value)}
+                onChangePasswordHidden={() =>
+                  setIsPasswordHidden(!isPasswordHidden)
+                }
+              />
             </fieldset>
           </form>
 
