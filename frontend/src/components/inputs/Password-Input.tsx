@@ -1,4 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import "./Password-Input.css";
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   isPasswordHidden: boolean;
@@ -18,12 +19,12 @@ export default function PasswordInput(props: Props) {
       <section
         className="border border-gray-400 rounded-lg p-2 mt-2
         focus-within:ring-2 focus-within:ring-primary-400 bg-gray-100
-        flex items-center"
+        flex items-center password-container"
       >
         <input
           id={props.id}
           type={isPasswordHidden ? "password" : "text"}
-          className="outline-none w-full bg-gray-100"
+          className="outline-none w-full bg-gray-100 disabled:cursor-not-allowed"
           value={props.value}
           onChange={props.onChange}
           {...inputProps}
