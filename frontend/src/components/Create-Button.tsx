@@ -76,16 +76,13 @@ export default function CreateButton({ onCreate, disabled }: Props) {
               />
             </fieldset>
 
-            <fieldset>
-              <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
-                Password
-              </label>
-
+            <fieldset className="mb-6">
               <PasswordInput
-                id="roomCode"
-                password={password}
+                id="create-roomCode"
+                disabled={!isPrivate}
+                value={password}
                 isPasswordHidden={isPasswordHidden}
-                onChangePassword={(event) => setPassword(event.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
                 onChangePasswordHidden={() =>
                   setIsPasswordHidden(!isPasswordHidden)
                 }
@@ -98,14 +95,14 @@ export default function CreateButton({ onCreate, disabled }: Props) {
               disabled={isPrivate && !password}
               className="px-4 py-2 rounded-md bg-primary-400 text-white
                 hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
-                active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95
-                  disabled:opacity-50 disabled:cursor-not-allowed"
+                active:bg-primary-700 active:ring-2 active:ring-primary-700 disabled:active:scale-95
+                  disabled:opacity-50 disabled:pointer-events-none"
               onClick={handleJoin}
             >
               Create a Room
             </button>
             <button
-              className="px-4 py-2 border-2 rounded-md border-gray-200
+              className="px-4 py-2 border rounded-md border-gray-200
                 hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
                 active:border-primary-700 active:scale-95 active:text-primary-700"
               onClick={closeModal}
