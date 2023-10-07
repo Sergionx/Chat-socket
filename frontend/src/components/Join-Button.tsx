@@ -6,7 +6,7 @@ interface Props {
   disabled: boolean;
 }
 
-export default function JoinModal({ onJoin, disabled }: Props) {
+export default function JoinButton({ onJoin, disabled }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const [roomCode, setRoomCode] = useState("");
 
