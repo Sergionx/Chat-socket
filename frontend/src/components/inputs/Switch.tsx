@@ -18,7 +18,7 @@ export default function Switch({ onCheck, value, id }: Props) {
       />
       <div
         className="w-[4rem] h-8 border-2 border-gray-300 rounded-full peer
-          peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300
+          peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-400
           peer-checked:after:translate-x-full peer-checked:after:border-white 
           bg-gray-200 peer-checked:bg-primary-500 
           after:content-[''] after:absolute after:top-[5px] after:left-[6px]
