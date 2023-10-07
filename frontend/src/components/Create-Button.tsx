@@ -51,11 +51,11 @@ export default function CreateButton({ onCreate, disabled }: Props) {
           rounded-lg shadow-lg p-0 relative"
       >
         <main
-          className="flex flex-col min-w-[300px] max-w-[600px] px-4 pb-4 py-8
+          className="flex flex-col w-56 sm:w-72 px-4 pb-4 py-8
             border border-gray-400 "
         >
           <button
-            className="absolute right-3 top-3
+            className="absolute sm:right-3 sm:top-3 right-1 top-1
             hover:bg-gray-200 p-2 rounded-md"
             onClick={closeModal}
           >
@@ -112,17 +112,19 @@ export default function CreateButton({ onCreate, disabled }: Props) {
 
           <footer className="flex flex-row-reverse gap-4 pt-4 border-t border-gray-500">
             <button
+              disabled={isPrivate && !password}
               className="px-4 py-2 rounded-md bg-primary-400 text-white
-            hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
-            active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95"
+                hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
+                active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95
+                  disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleJoin}
             >
-              Join Room
+              Create a Room
             </button>
             <button
               className="px-4 py-2 border-2 rounded-md border-gray-200
-            hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
-            active:border-primary-700 active:scale-95 active:text-primary-700"
+                hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
+                active:border-primary-700 active:scale-95 active:text-primary-700"
               onClick={closeModal}
             >
               Cancel

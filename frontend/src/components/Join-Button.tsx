@@ -46,17 +46,16 @@ export default function JoinButton({ onJoin, disabled }: Props) {
         rounded-lg shadow-lg p-0 relative"
       >
         <main
-          className="flex flex-col min-w-[300px] max-w-[600px] px-4 pb-4 py-8
-          border border-gray-400 "
+          className="flex flex-col w-56 sm:w-72 px-4 pb-4 py-8
+            border border-gray-400 "
         >
           <button
-            className="absolute right-3 top-3
+            className="absolute sm:right-3 sm:top-3 right-1 top-1
             hover:bg-gray-200 p-2 rounded-md"
             onClick={closeModal}
           >
             <AiOutlineClose size={16} />
           </button>
-
 {/* TODO - Añadir validación con react-forms */}
           <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
             Room Code
