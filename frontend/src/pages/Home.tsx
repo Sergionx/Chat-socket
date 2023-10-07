@@ -2,7 +2,8 @@ import { useState } from "react";
 import axiosClient from "../config/axiosClient";
 import { useNavigate } from "react-router-dom";
 import { hashPassword } from "../utils/encryption";
-import JoinModal from "../components/Join-Button";
+import JoinButton from "../components/Join-Button";
+import CreateButton from "../components/Create-Button";
 
 export default function Home() {
   const [userName, setUserName] = useState("");
@@ -65,17 +66,9 @@ export default function Home() {
       </section>
 
       <footer className="flex gap-4 mt-4">
-        <JoinModal disabled={joiningRoom} onJoin={onJoin} />
+        <JoinButton disabled={joiningRoom} onJoin={onJoin} />
 
-        <button
-          onClick={handleCreateChat}
-          disabled={joiningRoom || !userName}
-          // disabled={true}
-          className="px-6 py-3.5 border-2 border-primary-400 basis-1/2 rounded-lg
-            font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Create Chat
-        </button>
+        <CreateButton disabled={joiningRoom || !userName} onCreate={onJoin} />
       </footer>
 
       <span
