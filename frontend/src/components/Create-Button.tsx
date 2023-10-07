@@ -12,7 +12,6 @@ export default function CreateButton({ onCreate, disabled }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
   function openModal() {
     modalRef.current?.showModal();
@@ -80,11 +79,7 @@ export default function CreateButton({ onCreate, disabled }: Props) {
                 id="create-roomCode"
                 disabled={!isPrivate}
                 value={password}
-                isPasswordHidden={isPasswordHidden}
                 onChange={(event) => setPassword(event.target.value)}
-                onChangePasswordHidden={() =>
-                  setIsPasswordHidden(!isPasswordHidden)
-                }
               />
             </fieldset>
           </form>

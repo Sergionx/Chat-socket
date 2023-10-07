@@ -1,14 +1,12 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import "./Password-Input.css";
+import { useState } from "react";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  isPasswordHidden: boolean;
-  onChangePasswordHidden: () => void;
-}
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 // TODO - Better autocomplete highlight
 export default function PasswordInput(props: Props) {
-  const { isPasswordHidden, onChangePasswordHidden, ...inputProps } = props;
+  const [isHidden, setIsHidden] = useState(false);
 
   return (
     <>
@@ -23,14 +21,14 @@ export default function PasswordInput(props: Props) {
       >
         <input
           id={props.id}
-          type={isPasswordHidden ? "password" : "text"}
+          type={isHidden ? "password" : "text"}
           className="outline-none w-full bg-gray-100 disabled:cursor-not-allowed"
           value={props.value}
           onChange={props.onChange}
-          {...inputProps}
+          {...props}
         />
-        <button type="button" onClick={onChangePasswordHidden}>
-          {isPasswordHidden ? (
+        <button type="button" onClick={() => setIsHidden(!isHidden)}>
+          {isHidden ? (
             <AiFillEye
               size={24}
               className="text-primary-400 hover:text-primary-500"
