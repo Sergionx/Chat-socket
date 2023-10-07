@@ -4,11 +4,10 @@ import PasswordInput from "./inputs/Password-Input";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface Props {
-  onCreate: (roomCode: string) => void;
+  onCreate: (password: string) => void;
   disabled: boolean;
 }
 
-// TODO - Create modal component
 export default function CreateButton({ onCreate, disabled }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -28,7 +27,7 @@ export default function CreateButton({ onCreate, disabled }: Props) {
     setPassword("");
   }
 
-  function handleJoin() {
+  function handleCreate() {
     onCreate(password);
     closeModal();
   }
@@ -97,7 +96,7 @@ export default function CreateButton({ onCreate, disabled }: Props) {
                 hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
                 active:bg-primary-700 active:ring-2 active:ring-primary-700 disabled:active:scale-95
                   disabled:opacity-50 disabled:pointer-events-none"
-              onClick={handleJoin}
+              onClick={handleCreate}
             >
               Create a Room
             </button>
