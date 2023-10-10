@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import PasswordInput from "./inputs/Password-Input";
+import Modal from "./Modal";
 
 interface Props {
   onJoin: (roomCode: string, password: string) => void;
@@ -30,6 +31,57 @@ export default function JoinButton({ onJoin, disabled }: Props) {
     closeModal();
   }
 
+  const joinModal = (
+    <Modal modalRef={modalRef} onClose={closeModal}>
+      <>
+        {/* TODO - Añadir validación con react-forms */}
+
+        <form>
+          <fieldset>
+            <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
+              Room Code
+            </label>
+            <input
+              type="text"
+              id="roomCode"
+              className="border border-gray-400 rounded-lg p-2 mb-6 outline-none
+            focus:ring-2 focus:ring-primary-400 bg-gray-100 w-full"
+              value={roomCode}
+              onChange={(event) => setRoomCode(event.target.value)}
+            />
+          </fieldset>
+
+          <fieldset className="mb-6">
+            <PasswordInput
+              id="create-roomCode"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </fieldset>
+        </form>
+
+        <footer className="flex flex-row-reverse gap-4 pt-4 border-t border-gray-500">
+          <button
+            className="px-4 py-2 rounded-md bg-primary-400 text-white
+            hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
+            active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95"
+            onClick={handleJoin}
+          >
+            Join Room
+          </button>
+          <button
+            className="px-4 py-2 border-2 rounded-md border-gray-200
+            hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
+            active:border-primary-700 active:scale-95 active:text-primary-700"
+            onClick={closeModal}
+          >
+            Cancel
+          </button>
+        </footer>
+      </>
+    </Modal>
+  );
+
   return (
     <>
       <button
@@ -41,69 +93,7 @@ export default function JoinButton({ onJoin, disabled }: Props) {
         Join
       </button>
 
-      <dialog
-        ref={modalRef}
-        onClose={closeModal}
-        className="backdrop:bg-black/50 backdrop:backdrop-blur-sm
-        rounded-lg shadow-lg p-0 relative"
-      >
-        <main
-          className="flex flex-col w-56 sm:w-72 px-4 pb-4 py-8
-            border border-gray-400 "
-        >
-          <button
-            className="absolute sm:right-3 sm:top-3 right-1 top-1
-            hover:bg-gray-200 p-2 rounded-md active:bg-gray-300"
-            onClick={closeModal}
-          >
-            <AiOutlineClose size={16} />
-          </button>
-          {/* TODO - Añadir validación con react-forms */}
-
-          <form>
-            <fieldset>
-              <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
-                Room Code
-              </label>
-              <input
-                type="text"
-                id="roomCode"
-                className="border border-gray-400 rounded-lg p-2 mb-6 outline-none
-            focus:ring-2 focus:ring-primary-400 bg-gray-100 w-full"
-                value={roomCode}
-                onChange={(event) => setRoomCode(event.target.value)}
-              />
-            </fieldset>
-
-            <fieldset className="mb-6">
-              <PasswordInput
-                id="create-roomCode"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </fieldset>
-          </form>
-
-          <footer className="flex flex-row-reverse gap-4 pt-4 border-t border-gray-500">
-            <button
-              className="px-4 py-2 rounded-md bg-primary-400 text-white
-            hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
-            active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95"
-              onClick={handleJoin}
-            >
-              Join Room
-            </button>
-            <button
-              className="px-4 py-2 border-2 rounded-md border-gray-200
-            hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
-            active:border-primary-700 active:scale-95 active:text-primary-700"
-              onClick={closeModal}
-            >
-              Cancel
-            </button>
-          </footer>
-        </main>
-      </dialog>
+      {joinModal}
     </>
   );
 }
