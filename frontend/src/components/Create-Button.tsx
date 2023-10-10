@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import Switch from "./inputs/Switch";
 import PasswordInput from "./inputs/Password-Input";
-import { AiOutlineClose } from "react-icons/ai";
 import Modal from "./Modal";
 
 interface Props {

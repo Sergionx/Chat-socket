@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
 import PasswordInput from "./inputs/Password-Input";
 import Modal from "./Modal";
 
