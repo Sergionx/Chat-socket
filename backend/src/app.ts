@@ -1,10 +1,15 @@
 import express from "express";
 import http from "http";
+import cors from "cors";
+
 import { Server as SocketServer } from "socket.io";
 import { config as configDotENV } from "dotenv";
-import { listenImages, listenMessages } from "./listeners";
+import responseTime from "response-time";
+
 import routes from "./routes";
-import cors from "cors";
+import metrics from "./metrics";
+import { listenImages, listenMessages } from "./listeners";
+import { shouldJoinRoom } from "./utils/authentication";
 
 configDotENV();
 
@@ -22,23 +27,24 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(responseTime());
 
 app.use("/api", routes);
+app.use("/metrics", metrics);
 
-io.on("connection", (socket) => {
-  const { roomCode, roomPassword } = socket.handshake.query as {
+io.on("connection", async (socket) => {
+  const { roomCode, roomPassword } = socket.handshake.auth as {
     roomCode: string;
     roomPassword: string;
   };
 
-  // if (isRoomPrivate(roomCode) && isPasswordRequired(roomCode)) {
-  //   // Perform authentication checks here, such as checking if the user has the correct password
-  //   if (!isAuthenticated(roomCode, roomPassword)) {
-  //     // If the user is not authenticated, disconnect the socket and return an error message
-  //     socket.disconnect();
-  //     return socket.emit("error", "Invalid password");
-  //   }
-  // }
+  const connectionMessage = await shouldJoinRoom(roomCode, roomPassword);
+  if (connectionMessage) {
+    socket.emit("error", {
+      message: connectionMessage,
+    });
+    return socket.disconnect();
+  }
 
   console.log("A user connected");
   socket.join(roomCode);
