@@ -51,7 +51,7 @@ export default function Messages({ messages, handleImageClick }: Props) {
               more="Read more"
             >
             </ReactShowMoreText> */}
-              {message.text}
+              {message.text?.trim()}
 
             <footer className="text-end text-sm">
               {message.sendedAt.toLocaleString(navigator.language, {
