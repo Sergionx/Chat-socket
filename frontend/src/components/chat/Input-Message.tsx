@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 import { Socket } from "socket.io-client";
 import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
@@ -31,9 +31,15 @@ export default function InputMessage({
     heightUnit: "vh",
   });
 
-  const canSubmit: boolean = useMemo(() => {
-    return message.length > 0 || !!imagesSelected;
-  }, [message, imagesSelected]);
+  const canSubmit: boolean = useMemo(
+    () => message.length > 0 || !!imagesSelected,
+    [message, imagesSelected]
+  );
+
+  const disabled: boolean = useMemo(
+    () => socket?.disconnected ?? true,
+    [socket?.disconnected]
+  );
 
   return (
     <form
@@ -44,9 +50,10 @@ export default function InputMessage({
     >
       <textarea
         ref={textAreaRef}
+        disabled={disabled}
         placeholder="Write your message..."
         className="placeholder-primary-300 resize-none w-full
-          outline-none group-focus:ring-2 group-focus:ring-primary-400"
+          outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         value={message}
         onChange={handleMessageChange}
         onKeyDown={(event) => {
@@ -60,11 +67,18 @@ export default function InputMessage({
         type="file"
         id="file"
         hidden={true}
+        disabled={disabled}
         accept="image/*"
+        className="peer"
         onChange={(event) => loadImages(event.target.files)}
       />
 
-      <label htmlFor="file" className="ml-auto cursor-pointer relative">
+      <label
+        htmlFor="file"
+        className="ml-auto cursor-pointer relative
+        peer-disabled:opacity-50 peer-disabled:cursor-not-allowed
+      "
+      >
         <AiOutlineFileImage
           size={28}
           className="text-primary-400 hover:text-primary-500"
@@ -78,9 +92,11 @@ export default function InputMessage({
       </label>
 
       <button
-        disabled={!canSubmit}
+        disabled={!canSubmit || disabled}
         className="ml-2 bg-secondary-100 rounded-full p-2 
           disabled:opacity-50 disabled:cursor-not-allowed"
+        // onClick={() => socket.disconnect()}
+        // type="button"
         type="submit"
       >
         <AiOutlineSend
