@@ -4,6 +4,7 @@ import { Socket } from "socket.io-client";
 import useSocket from "./useSocket";
 import { useLocation } from "react-router-dom";
 import { decryptString } from "../utils/encryption";
+import useAuth from "./useAuth";
 
 interface Props {
   onSocketError: (error: { message: string }) => void;
@@ -14,21 +15,12 @@ export default function useMessages({ onSocketError }: Props) {
   const [imagesSelected, setImagesSelected] = useState<FileList | null>(null);
   const [messages, setMessages] = useState<SocketMessage[]>([]);
 
-  const location = useLocation();
-
-  const userName: string = useMemo(
-    () => location.state?.userName ?? "",
-    [location.state?.userName]
-  );
-
-  const password: string = useMemo(
-    () => location.state?.password ?? "",
-    [location.state?.password]
-  );
+  const { userName, password } = useAuth();
 
   const { roomCode, socket, activateListeners } = useSocket({
-    receiveMessage,
+    userName,
     password,
+    receiveMessage,
     onSocketError,
   });
 
