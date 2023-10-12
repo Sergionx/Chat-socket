@@ -11,29 +11,35 @@ export default function Home() {
   const [joiningRoom, setJoiningRoom] = useState(false);
   const navigate = useNavigate();
 
-  async function handleCreateChat(password: string): Promise<void> {
+  async function handleCreateChat(
+    password: string,
+    isPrivate: boolean
+  ): Promise<void> {
     if (!userName) console.log("Username is required");
 
     try {
       setJoiningRoom(true);
       const response = await axiosClient.post("/chat-room", {
         userName,
-        isPrivate: false,
-        password: hashPassword(password),
+        isPrivate: isPrivate,
+        password: password ? hashPassword(password) : "",
       });
 
       const { roomCode } = await response.data;
 
-      console.log(roomCode);
-      navigate(`/${roomCode}`, { state: { userName } });
+      navigate(`/${roomCode}`, { state: { userName, password } });
+
       setJoiningRoom(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setJoiningRoom(false);
+    }
   }
 
   function onJoin(roomCode: string, password: string) {
     if (!userName) console.log("Username is required");
     if (!roomCode) console.log("Room code is required");
-    navigate(`/${roomCode}`, { state: { userName } });
+    navigate(`/${roomCode}`, { state: { userName, password } });
   }
 
   return (
