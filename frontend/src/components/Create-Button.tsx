@@ -4,7 +4,7 @@ import PasswordInput from "./inputs/Password-Input";
 import Modal from "./Modal";
 
 interface Props {
-  onCreate: (password: string) => void;
+  onCreate: (password: string, isPrivate: boolean) => void;
   disabled: boolean;
 }
 
@@ -28,14 +28,14 @@ export default function CreateButton({ onCreate, disabled }: Props) {
 
   function handleCreate() {
     console.log("Creating room with password: ", password);
-    onCreate(password);
+    onCreate(password, isPrivate);
     closeModal();
   }
 
   const createModal = (
     <Modal modalRef={modalRef} onClose={closeModal}>
       <>
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleCreate} className="flex flex-col gap-4">
           <fieldset className="flex gap-4 items-center">
             <label htmlFor="isRoomPrivate" className="text-lg font-semibold">
               Private Room

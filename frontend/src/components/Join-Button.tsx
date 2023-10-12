@@ -35,7 +35,7 @@ export default function JoinButton({ onJoin, disabled }: Props) {
       <>
         {/* TODO - Añadir validación con react-forms */}
 
-        <form>
+        <form onSubmit={handleJoin}>
           <fieldset>
             <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
               Room Code
