@@ -1,27 +1,52 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 import { SocketMessage } from "../models/SocketMessage";
+import { hashPassword } from "../utils/encryption";
 
 interface Props {
   receiveMessage(newMessage: SocketMessage, decrypt: boolean): void;
+  password: string;
+  onSocketError: (error: { message: string }) => void;
 }
 
-export default function useSocket({ receiveMessage }: Props) {
-  const socketRef = useRef<Socket>();
-
+export default function useSocket({
+  receiveMessage,
+  password,
+  onSocketError,
+}: Props) {
   const { roomCode } = useParams<{ roomCode: string }>();
 
-  useEffect(() => {
-    socketRef.current = io("/", {
+  const socketRef = useRef<Socket>(
+    io("/", {
+      autoConnect: false,
       auth: {
         roomCode,
+        roomPassword: password ? hashPassword(password) : "",
       },
-    });
+    })
+  );
+  const [socketConnected, setSocketConnected] = useState(false);
 
-    socketRef.current.on("message", (message) => receiveMessage(message, true));
-
-    return () => turnOffSoccket();
+  useEffect(() => {
+    try {
+      socketRef.current.connect();
+      socketRef.current.on("message", (message) =>
+        receiveMessage(message, true)
+      );
+      
+      socketRef.current.on("connect", () => {
+        setSocketConnected(true);
+      });
+      socketRef.current.on("disconnect", () => {
+        setSocketConnected(false);
+      });
+      
+      socketRef.current.on("error", onSocketError);
+      return () => turnOffSoccket();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   function turnOffSoccket() {
