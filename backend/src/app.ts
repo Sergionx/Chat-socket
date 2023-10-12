@@ -43,7 +43,7 @@ io.on("connection", async (socket) => {
     socket.emit("error", {
       message: connectionMessage,
     });
-    return socket.disconnect();
+    return socket.disconnect(true);
   }
 
   console.log("A user connected");
