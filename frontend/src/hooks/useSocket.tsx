@@ -17,35 +17,32 @@ export default function useSocket({
 }: Props) {
   const { roomCode } = useParams<{ roomCode: string }>();
 
-  const socketRef = useRef<Socket>(
-    io("/", {
-      autoConnect: false,
-      auth: {
-        roomCode,
-        roomPassword: password ? hashPassword(password) : "",
-      },
-    })
-  );
+  const socketRef = useRef<Socket | null>(null);
   const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
     try {
-      socketRef.current.connect();
+      if (socketConnected) return;
+
+      socketRef.current = io("/", {
+        auth: {
+          roomCode,
+          roomPassword: password ? hashPassword(password) : "",
+        },
+      });
+
       socketRef.current.on("message", (message) =>
         receiveMessage(message, true)
       );
-      
-      socketRef.current.on("connect", () => {
-        setSocketConnected(true);
-      });
-      socketRef.current.on("disconnect", () => {
-        setSocketConnected(false);
-      });
-      
+
+      socketRef.current.on("connect", () => setSocketConnected(true));
+      socketRef.current.on("disconnect", () => setSocketConnected(false));
+
       socketRef.current.on("error", onSocketError);
       return () => turnOffSoccket();
     } catch (error) {
       console.log(error);
+      setSocketConnected(false);
     }
   }, []);
 
@@ -55,6 +52,7 @@ export default function useSocket({
 
   return {
     socket: socketRef.current,
+
     roomCode,
   };
 }
