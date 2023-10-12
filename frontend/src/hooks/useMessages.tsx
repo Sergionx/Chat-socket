@@ -5,18 +5,32 @@ import useSocket from "./useSocket";
 import { useLocation } from "react-router-dom";
 import { decryptString } from "../utils/encryption";
 
-export default function useMessages() {
+interface Props {
+  onSocketError: (error: { message: string }) => void;
+}
+
+export default function useMessages({ onSocketError }: Props) {
   const [message, setMessage] = useState("");
   const [imagesSelected, setImagesSelected] = useState<FileList | null>(null);
   const [messages, setMessages] = useState<SocketMessage[]>([]);
 
   const location = useLocation();
-  const userName: string | undefined = useMemo(
-    () => location.state?.userName,
+
+  const userName: string = useMemo(
+    () => location.state?.userName ?? "",
     [location.state?.userName]
   );
 
-  const { roomCode, socket } = useSocket({ receiveMessage });
+  const password: string = useMemo(
+    () => location.state?.password ?? "",
+    [location.state?.password]
+  );
+
+  const { roomCode, socket } = useSocket({
+    receiveMessage,
+    password,
+    onSocketError,
+  });
 
   function receiveMessage(newMessage: SocketMessage, decrypt: boolean): void {
     newMessage.text =
