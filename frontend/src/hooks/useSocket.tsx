@@ -31,14 +31,8 @@ export default function useSocket({
         },
       });
 
-      socketRef.current.on("message", (message) =>
-        receiveMessage(message, true)
-      );
+      activateListeners(socketRef.current);
 
-      socketRef.current.on("connect", () => setSocketConnected(true));
-      socketRef.current.on("disconnect", () => setSocketConnected(false));
-
-      socketRef.current.on("error", onSocketError);
       return () => turnOffSoccket();
     } catch (error) {
       console.log(error);
@@ -50,9 +44,20 @@ export default function useSocket({
     socketRef.current?.disconnect();
   }
 
+  function activateListeners(socket: Socket, replaceOldSocket = false) {
+    if (replaceOldSocket) socketRef.current = socket;
+
+    socket.on("message", (message) => receiveMessage(message, true));
+
+    socket.on("connect", () => setSocketConnected(true));
+    socket.on("disconnect", () => setSocketConnected(false));
+
+    socket.on("error", onSocketError);
+  }
+
   return {
     socket: socketRef.current,
-
+    activateListeners,
     roomCode,
   };
 }

@@ -26,7 +26,7 @@ export default function useMessages({ onSocketError }: Props) {
     [location.state?.password]
   );
 
-  const { roomCode, socket } = useSocket({
+  const { roomCode, socket, activateListeners } = useSocket({
     receiveMessage,
     password,
     onSocketError,
@@ -136,6 +136,7 @@ export default function useMessages({ onSocketError }: Props) {
     handleMessageChange,
     handleFormSubmit,
     socket,
+    activateListeners,
     roomCode,
   };
 }
