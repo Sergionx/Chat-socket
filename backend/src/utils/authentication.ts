@@ -20,7 +20,6 @@ export async function isAuthenticated(
 ): Promise<boolean> {
   try {
     const roomData = await redisClient.hGetAll(`chatRooms:${roomCode}`);
-    console.log(roomData);
 
     if (!roomData) {
       return false;
