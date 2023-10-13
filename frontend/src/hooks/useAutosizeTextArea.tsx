@@ -17,22 +17,26 @@ export default function useAutosizeTextArea(
   const { maxLines = 3, maxHeight, heightUnit = "px" } = options;
 
   useEffect(() => {
-    if (textAreaRef) {
-      // We need to reset the height momentarily to get the correct scrollHeight for the textarea
-      textAreaRef.style.height = "0px";
-      const scrollHeight = textAreaRef.scrollHeight;
+    if (!textAreaRef) return;
 
-      // We then set the height directly, outside of the render loop
-      // Trying to set this with state or a ref will produce an incorrect value.
-      let newHeight = `${scrollHeight + 2}px`;
-      if (maxHeight) {
-        newHeight = `min(${maxHeight}${heightUnit}, ${newHeight})`;
-      } else if (maxLines) {
-        const lineHeight = parseInt(getComputedStyle(textAreaRef).lineHeight);
-        const maxScrollHeight = lineHeight * maxLines;
-        newHeight = `min(${maxScrollHeight}px, ${newHeight})`;
-      }
-      textAreaRef.style.height = newHeight;
+    // We need to reset the height momentarily to get the correct scrollHeight for the textarea
+    textAreaRef.style.height = "0px";
+    const scrollHeight = textAreaRef.scrollHeight;
+
+    // We then set the height directly, outside of the render loop
+    // Trying to set this with state or a ref will produce an incorrect value.
+    let newHeight = `${scrollHeight + 2}px`;
+    if (maxHeight) {
+      newHeight = `min(${maxHeight}${heightUnit}, ${newHeight})`;
+    } else if (maxLines) {
+      newHeight = `min(${newHeight}, ${lineHeight(maxLines)})`;
     }
+    textAreaRef.style.height = newHeight;
   }, [textAreaRef, value]);
+
+  function lineHeight(lines: number) {
+    const lineHeight = parseInt(getComputedStyle(textAreaRef!).lineHeight);
+    const maxScrollHeight = lineHeight * lines;
+    return `${maxScrollHeight}px`;
+  }
 }
