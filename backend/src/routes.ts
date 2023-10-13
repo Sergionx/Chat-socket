@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import redisClient from "./redis";
-import { Room } from "./models/Room";
 import { roomExists } from "./utils/authentication";
 
 interface ChatRoomRequest {
