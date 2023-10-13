@@ -1,13 +1,16 @@
-import { useMemo, useState } from "react";
-import { SocketMessage } from "../models/SocketMessage";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
+
+import { SocketMessage } from "../models/SocketMessage";
+
 import useSocket from "./useSocket";
-import { useLocation } from "react-router-dom";
+import useAuth from "./useAuth"
+;
 import { decryptString } from "../utils/encryption";
-import useAuth from "./useAuth";
+import { SocketError } from "../utils/errors";
 
 interface Props {
-  onSocketError: (error: { message: string }) => void;
+  onSocketError: (error: { messages: SocketError[] }) => void;
 }
 
 export default function useMessages({ onSocketError }: Props) {

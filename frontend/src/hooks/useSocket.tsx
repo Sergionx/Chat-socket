@@ -3,16 +3,19 @@ import { useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 import { SocketMessage } from "../models/SocketMessage";
 import { hashPassword } from "../utils/encryption";
+import { SocketError } from "../utils/errors";
 
 interface Props {
-  receiveMessage(newMessage: SocketMessage, decrypt: boolean): void;
   password: string;
-  onSocketError: (error: { message: string }) => void;
+  userName: string;
+  receiveMessage(newMessage: SocketMessage, decrypt: boolean): void;
+  onSocketError: (error: { messages: SocketError[] }) => void;
 }
 
 export default function useSocket({
-  receiveMessage,
   password,
+  userName,
+  receiveMessage,
   onSocketError,
 }: Props) {
   const { roomCode } = useParams<{ roomCode: string }>();
@@ -28,6 +31,7 @@ export default function useSocket({
         auth: {
           roomCode,
           roomPassword: password ? hashPassword(password) : "",
+          userName,
         },
       });
 
