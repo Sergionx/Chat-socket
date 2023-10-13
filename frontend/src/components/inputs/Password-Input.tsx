@@ -6,7 +6,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 // TODO - Better autocomplete highlight
 export default function PasswordInput(props: Props) {
-  const [isHidden, setIsHidden] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
 
   return (
     <>
