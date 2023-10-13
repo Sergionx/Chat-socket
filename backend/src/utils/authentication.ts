@@ -46,17 +46,24 @@ export async function roomExists(roomCode: string): Promise<boolean> {
   }
 }
 
+// TODO - Devolver array de errores
 export async function shouldJoinRoom(
   roomCode: string,
-  roomPassword: string
-): Promise<string> {
+  roomPassword: string,
+  userName: string
+): Promise<string[]> {
+  const messages = [];
+  if (!userName) {
+    messages.push("Invalid username");
+  }
+
   if (!(await roomExists(roomCode))) {
-    return "Room does not exist";
+    return ["Room does not exist"];
   }
 
   if (!(await isAuthenticated(roomCode, roomPassword))) {
-    return "Invalid password";
+    messages.push("Invalid password");
   }
 
-  return "";
+  return messages;
 }

@@ -33,15 +33,16 @@ app.use("/api", routes);
 app.use("/metrics", metrics);
 
 io.on("connection", async (socket) => {
-  const { roomCode, roomPassword } = socket.handshake.auth as {
+  const { roomCode, roomPassword, userName } = socket.handshake.auth as {
     roomCode: string;
     roomPassword: string;
+    userName: string;
   };
 
-  const connectionMessage = await shouldJoinRoom(roomCode, roomPassword);
-  if (connectionMessage) {
+  const connectionMessage = await shouldJoinRoom(roomCode, roomPassword, userName);
+  if (connectionMessage.length > 0) {
     socket.emit("error", {
-      message: connectionMessage,
+      messages: connectionMessage,
     });
     return socket.disconnect(true);
   }
