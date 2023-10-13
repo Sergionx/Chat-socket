@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { AiOutlineFileImage, AiOutlineSend } from "react-icons/ai";
 import { Socket } from "socket.io-client";
 import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
 
 interface Props {
-  socket: Socket;
+  socket: Socket | null;
   message: string;
   imagesSelected: FileList | null;
   loadImages: (files: FileList | null) => void;
@@ -44,7 +44,7 @@ export default function InputMessage({
   return (
     <form
       ref={formRef}
-      onSubmit={(e) => handleFormSubmit(e, socket)}
+      onSubmit={(e) => handleFormSubmit(e, socket!)}
       className="flex items-center mt-auto bg-white p-2 rounded-md focus-within:ring-2
             ring-offset-2 ring-secondary-600 "
     >
@@ -52,7 +52,7 @@ export default function InputMessage({
         ref={textAreaRef}
         disabled={disabled}
         placeholder="Write your message..."
-        className="placeholder-primary-300 resize-none w-full
+        className="placeholder-primary-300 resize-none w-full h-[26px]
           outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         value={message}
         onChange={handleMessageChange}
