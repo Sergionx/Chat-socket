@@ -1,25 +1,33 @@
 import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { BiPaste } from "react-icons/bi";
 import { Tooltip } from "react-tooltip";
+import { io } from "socket.io-client";
 
 import Messages from "../components/chat/Messages";
 import SelectedImage from "../components/chat/Selected-Image";
 import InputMessage from "../components/chat/Input-Message";
+import Modal from "../components/Modal";
+import PasswordInput from "../components/inputs/Password-Input";
 
 import useMessages from "../hooks/useMessages";
 import useSelectedImage from "../hooks/useSelectedImage";
+import useAuth from "../hooks/useAuth";
 
-import { BiPaste } from "react-icons/bi";
-import Modal from "../components/Modal";
-import PasswordInput from "../components/inputs/Password-Input";
-import { Link, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
 import { hashPassword } from "../utils/encryption";
+import { SocketError, showError } from "../utils/errors";
 
 export default function ChatRoom() {
   const passwordModalRef = useRef<HTMLDialogElement>(null);
   const redirectModalRef = useRef<HTMLDialogElement>(null);
 
-  const [password, setPassword] = useState("");
+  const { userName, password } = useAuth();
+
+  const [passwordModal, setPasswordModal] = useState(password);
+  const [userNameModal, setUserNameModal] = useState(userName);
+  const [socketErrors, setSocketErrors] = useState<SocketError[]>([]);
+
   const [copyClicked, setCopyClicked] = useState(false);
   const navigate = useNavigate();
 
@@ -41,19 +49,15 @@ export default function ChatRoom() {
     const socket = io("/", {
       auth: {
         roomCode,
-        roomPassword: hashPassword(password),
+        roomPassword: hashPassword(passwordModal),
+        userName: userNameModal,
       },
-    });
-
-    socket.on("connect_error", (error) => {
-      console.log(error);
-      onSocketError({ message: error.message });
     });
 
     socket.on("connect", () => {
       activateListeners(socket, true);
       navigate(`/${roomCode}`, {
-        state: { userName: "Mola", password },
+        state: { userName: userNameModal, password: passwordModal },
       });
     });
   }
@@ -90,39 +94,69 @@ export default function ChatRoom() {
   const { selectedImage, handleCloseClick, handleImageClick } =
     useSelectedImage();
 
-  // TODO - onSendPassword
-  const passwordModal = (
+  const fieldsModal = (
     <Modal modalRef={passwordModalRef} onClose={closePasswordModal}>
       <>
         {/* TODO - Añadir validación con react-forms */}
 
-        <form onSubmit={handleJoin}>
-          <fieldset className="mb-6">
-            <PasswordInput
-              id="create-roomCode"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </fieldset>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleJoin;
+          }}
+        >
+          {socketErrors.includes(SocketError.INVALID_USERNAME) && (
+            <fieldset className="mb-6">
+              <label htmlFor="userName" className="text-lg font-semibold ">
+                Username
+              </label>
+
+              <input
+                value={userNameModal}
+                onChange={(event) => setUserNameModal(event.target.value)}
+                className="border border-gray-400 rounded-lg p-2 mt-2 w-full
+                  focus:ring-2 focus:ring-primary-400 bg-gray-100 outline-none"
+              />
+            </fieldset>
+          )}
+
+          {socketErrors.includes(SocketError.INVALID_PASSWORD) && (
+            <fieldset className="mb-6">
+              <PasswordInput
+                id="create-roomCode"
+                value={passwordModal}
+                onChange={(event) => setPasswordModal(event.target.value)}
+              />
+            </fieldset>
+          )}
         </form>
 
-        <footer className="flex flex-row-reverse gap-4 pt-4 border-t border-gray-500">
-          <button
-            className="px-4 py-2 rounded-md bg-primary-400 text-white
-              hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
-              active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95"
-            onClick={handleJoin}
-          >
-            Join Room
-          </button>
-          <button
-            className="px-4 py-2 border-2 rounded-md border-gray-200
-              hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
-              active:border-primary-700 active:scale-95 active:text-primary-700"
-            onClick={closePasswordModal}
-          >
-            Cancel
-          </button>
+        <footer className="pt-4 border-t border-gray-500">
+          {/* TODO - Mostrar mensajes de error dinamicamente */}
+          <ul className="marker:text-red-500 list-disc pl-5 space-y-3 text-red-400 mb-4">
+            {socketErrors.map((error, index) => (
+              <li key={index}>{showError(error)}</li>
+            ))}
+          </ul>
+
+          <section className="flex flex-row-reverse gap-4">
+            <button
+              className="px-4 py-2 rounded-md bg-primary-400 text-white
+                hover:bg-primary-500 hover:ring-2 hover:ring-primary-400
+                active:bg-primary-700 active:ring-2 active:ring-primary-700 active:scale-95"
+              onClick={handleJoin}
+            >
+              Join Room
+            </button>
+            <button
+              className="px-4 py-2 border-2 rounded-md border-gray-200
+                hover:border-gray-400 hover:bg-gray-50 hover:text-primary-700
+                active:border-primary-700 active:scale-95 active:text-primary-700"
+              onClick={closePasswordModal}
+            >
+              Cancel
+            </button>
+          </section>
         </footer>
       </>
     </Modal>
@@ -147,22 +181,25 @@ export default function ChatRoom() {
     </Modal>
   );
 
-  function onSocketError(error: { message: string }) {
-    switch (error.message) {
-      case "Room does not exist":
-        openRedirectModal();
-        break;
+  function onSocketError(error: { messages: SocketError[] }) {
+    if (error.messages.length === 0) return;
 
-      case "Invalid password":
+    setSocketErrors(error.messages);
+
+    for (const message of error.messages) {
+      if (message === SocketError.ROOM_DOES_NOT_EXIST) {
+        openRedirectModal();
+        return;
+      }
+
+      if (
+        message === SocketError.INVALID_USERNAME ||
+        message === SocketError.INVALID_PASSWORD
+      ) {
         openPasswordModal();
-        break;
-
-      default:
-        openRedirectModal();
-        break;
+        return;
+      }
     }
-
-    console.log(error);
   }
 
   return (
@@ -210,7 +247,7 @@ export default function ChatRoom() {
         />
       </main>
 
-      {passwordModal}
+      {fieldsModal}
       {redirectModal}
 
       <SelectedImage
