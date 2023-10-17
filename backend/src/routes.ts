@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/chat-room", async (req: Request, res: Response) => {
   const { isPrivate, password }: ChatRoomRequest = req.body;
   
-  if (!isPrivate || !password)
+  if (!isPrivate || password === undefined)
     return res.status(400).json({ error: "Invalid request" });
 
   let roomCode = nanoid(8);
