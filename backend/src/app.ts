@@ -14,18 +14,18 @@ configDotENV();
 
 const port = process.env.PORT;
 const encryptKey = process.env.ENCRYPT_KEY;
+const corsData = {
+  origin: process.env.FRONTEND_URL,
+  methods: ["GET", "POST"],
+};
 
 const app = express();
 const server = http.createServer(app);
-const io = new SocketServer(server);
+const io = new SocketServer(server, {
+  cors: corsData,
+});
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
+app.use(cors(corsData));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(responseTime());
