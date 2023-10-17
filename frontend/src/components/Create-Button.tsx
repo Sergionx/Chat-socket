@@ -49,7 +49,7 @@ export default function CreateButton({ onCreate, disabled }: Props) {
 
           <fieldset className="mb-6">
             <PasswordInput
-              id="create-roomCode"
+              id="join-roomCode"
               disabled={!isPrivate}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
