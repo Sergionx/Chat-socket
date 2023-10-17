@@ -27,7 +27,6 @@ export default function CreateButton({ onCreate, disabled }: Props) {
   }
 
   function handleCreate() {
-    console.log("Creating room with password: ", password);
     onCreate(password, isPrivate);
     closeModal();
   }
