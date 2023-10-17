@@ -7,7 +7,6 @@ import { config as configDotENV } from "dotenv";
 import responseTime from "response-time";
 
 import routes from "./routes";
-import metrics from "./metrics";
 import { listenImages, listenMessages } from "./listeners";
 import { shouldJoinRoom } from "./utils/authentication";
 
@@ -30,7 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(responseTime());
 
 app.use("/api", routes);
-app.use("/metrics", metrics);
 
 io.on("connection", async (socket) => {
   const { roomCode, roomPassword, userName } = socket.handshake.auth as {
