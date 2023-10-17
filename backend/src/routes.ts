@@ -14,8 +14,8 @@ const router = express.Router();
 // TODO - Add expiration to chat rooms
 router.post("/chat-room", async (req: Request, res: Response) => {
   const { isPrivate, password }: ChatRoomRequest = req.body;
-  
-  if (!isPrivate || password === undefined)
+
+  if (isPrivate === undefined || password === undefined)
     return res.status(400).json({ error: "Invalid request" });
 
   let roomCode = nanoid(8);
