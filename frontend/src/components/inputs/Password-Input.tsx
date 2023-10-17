@@ -27,7 +27,11 @@ export default function PasswordInput(props: Props) {
           onChange={props.onChange}
           {...props}
         />
-        <button type="button" onClick={() => setIsHidden(!isHidden)}>
+        <button
+          type="button"
+          disabled={props.disabled}
+          onClick={() => setIsHidden(!isHidden)}
+        >
           {isHidden ? (
             <AiFillEye
               size={24}
