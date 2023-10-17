@@ -21,7 +21,9 @@ const io = new SocketServer(server);
 
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
@@ -37,7 +39,11 @@ io.on("connection", async (socket) => {
     userName: string;
   };
 
-  const connectionMessage = await shouldJoinRoom(roomCode, roomPassword, userName);
+  const connectionMessage = await shouldJoinRoom(
+    roomCode,
+    roomPassword,
+    userName
+  );
   if (connectionMessage.length > 0) {
     socket.emit("error", {
       messages: connectionMessage,

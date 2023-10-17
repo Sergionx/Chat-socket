@@ -27,7 +27,7 @@ export default function useSocket({
     try {
       if (socketConnected) return;
 
-      socketRef.current = io("/", {
+      socketRef.current = io(import.meta.env.VITE_BACKEND_URL, {
         auth: {
           roomCode,
           roomPassword: password ? hashPassword(password) : "",
