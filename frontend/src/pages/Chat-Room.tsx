@@ -128,7 +128,6 @@ export default function ChatRoom() {
         </form>
 
         <footer className="pt-4 border-t border-gray-500">
-          {/* TODO - Mostrar mensajes de error dinamicamente */}
           <ul className="marker:text-red-500 list-disc pl-5 space-y-3 text-red-400 mb-4">
             {socketErrors.map((error, index) => (
               <li key={index}>{showError(error)}</li>
