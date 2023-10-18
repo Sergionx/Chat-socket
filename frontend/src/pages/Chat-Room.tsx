@@ -17,6 +17,7 @@ import useAuth from "../hooks/useAuth";
 
 import { hashPassword } from "../utils/encryption";
 import { SocketError, showError } from "../utils/errors";
+import ProgressBar from "../components/Progress-Bar";
 
 export default function ChatRoom() {
   const passwordModalRef = useRef<HTMLDialogElement>(null);
@@ -68,11 +69,6 @@ export default function ChatRoom() {
     redirectModalRef.current?.addEventListener("click", (event) => {
       if (event.target === redirectModalRef.current) closeRedirectModal();
     });
-
-    setTimeout(() => {
-      closeRedirectModal();
-      navigate("/");
-    }, 5000);
   }
 
   function closeRedirectModal() {
@@ -165,9 +161,11 @@ export default function ChatRoom() {
   const redirectModal = (
     <Modal modalRef={redirectModalRef} onClose={closeRedirectModal}>
       <>
-        <h1 className="text-xl font-bold mb-6">
+        <h1 className="text-xl font-bold mb-6">The room does not existe</h1>
+
+        <p className="text-gray-500 mb-4">
           You will be redirected to the home page in 5 seconds
-        </h1>
+        </p>
 
         <p>
           If you are not redirected, click{" "}
@@ -176,7 +174,13 @@ export default function ChatRoom() {
           </Link>
         </p>
 
-        {/* TODO - Add progress bar */}
+        <ProgressBar
+          seconds={5}
+          onEnd={() => {
+            closeRedirectModal();
+            navigate("/");
+          }}
+        />
       </>
     </Modal>
   );
