@@ -46,7 +46,6 @@ export async function roomExists(roomCode: string): Promise<boolean> {
   }
 }
 
-// TODO - Devolver array de errores
 export async function shouldJoinRoom(
   roomCode: string,
   roomPassword: string,
