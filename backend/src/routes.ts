@@ -11,7 +11,6 @@ interface ChatRoomRequest {
 
 const router = express.Router();
 
-// TODO - Add expiration to chat rooms
 router.post("/chat-room", async (req: Request, res: Response) => {
   const { isPrivate, password }: ChatRoomRequest = req.body;
 
