@@ -2,7 +2,8 @@ export default function Blobs() {
   return (
     <div className="absolute">
       <svg
-        className="object-cover fixed bottom-[10vh] left-[-10px] -z-10 overflow-visible"
+        className="object-cover fixed bottom-[10vh] left-[-10px] -z-10 overflow-visible
+          max-sm:bottom-[30vh]"
         width="661"
         height="512"
         viewBox="0 0 661 512"
@@ -39,7 +40,7 @@ export default function Blobs() {
       </svg>
 
       <svg
-        className="object-cover fixed top-[10vh] right-[-5px] -z-10 overflow-visible"
+        className="object-cover fixed top-[10vh] right-[-5px] -z-10 overflow-visible max-sm:hidden"
         width="453"
         height="599"
         viewBox="0 0 453 599"
