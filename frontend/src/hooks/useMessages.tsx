@@ -4,8 +4,7 @@ import { Socket } from "socket.io-client";
 import { SocketMessage } from "../models/SocketMessage";
 
 import useSocket from "./useSocket";
-import useAuth from "./useAuth"
-;
+import useAuth from "./useAuth";
 import { decryptString } from "../utils/encryption";
 import { SocketError } from "../utils/errors";
 
@@ -66,8 +65,9 @@ export default function useMessages({ onSocketError }: Props) {
         const base64String = reader.result?.toString();
         if (base64String) {
           // TODO - Better alert
-          if (base64String.length > 1000000) {
-            alert("File size must be less than 1 MB");
+          const MB = 1000000;
+          if (base64String.length > 6 * MB) {
+            alert("File size must be less than 6 MB");
             return;
           }
 
