@@ -36,14 +36,14 @@ export default function JoinButton({ onJoin, disabled }: Props) {
         {/* TODO - Añadir validación con react-forms */}
 
         <form onSubmit={handleJoin}>
-          <fieldset>
+          <fieldset className="mb-4">
             <label htmlFor="roomCode" className="text-lg font-semibold mb-2">
               Room Code
             </label>
             <input
               type="text"
               id="roomCode"
-              className="border border-gray-400 rounded-lg p-2 mb-6 outline-none
+              className="border border-gray-400 rounded-lg p-2 mt-2 outline-none
             focus:ring-2 focus:ring-primary-400 bg-gray-100 w-full"
               value={roomCode}
               onChange={(event) => setRoomCode(event.target.value)}
