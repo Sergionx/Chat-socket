@@ -37,8 +37,8 @@ export default function Home() {
   }
 
   function onJoin(roomCode: string, password: string) {
-    if (!userName) console.log("Username is required");
-    if (!roomCode) console.log("Room code is required");
+    if (!userName) return
+    if (!roomCode) return
     navigate(`/${roomCode}`, { state: { userName, password } });
   }
 
