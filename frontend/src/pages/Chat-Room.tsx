@@ -103,7 +103,7 @@ export default function ChatRoom() {
         >
           {socketErrors.includes(SocketError.INVALID_USERNAME) && (
             <fieldset className="mb-6">
-              <label htmlFor="userName" className="text-lg font-semibold ">
+              <label htmlFor="userName" className="text-lg font-semibold">
                 Username
               </label>
 
@@ -173,13 +173,15 @@ export default function ChatRoom() {
           </Link>
         </p>
 
-        <ProgressBar
-          seconds={5}
-          onEnd={() => {
-            closeRedirectModal();
-            navigate("/");
-          }}
-        />
+        {redirectModalRef.current?.open && (
+          <ProgressBar
+            seconds={5}
+            onEnd={() => {
+              closeRedirectModal();
+              navigate("/");
+            }}
+          />
+        )}
       </>
     </Modal>
   );
